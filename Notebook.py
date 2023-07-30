@@ -34,6 +34,8 @@ def add_note(filename):
         'last_modified': datetime.datetime.strftime(current_datetime, '%Y.%m.%d %H:%M:%S')
     })
     write_file(filename, data)
+    print('Запись добавлена.')
+    back_to_menu()
 
 def calc_id(filename):
     data = read_file(filename)
@@ -46,7 +48,6 @@ def calc_id(filename):
     return next_id
 
 def change_note(filename):
-    get_all_notes(filename)
     input_id = int(input('Введите id заметки для редактирования: '))
     new_head = input('Название заметки: ')
     new_note = input('Текст заметки: ')
@@ -60,9 +61,10 @@ def change_note(filename):
             i['note'] = new_note
             i['last_modified'] = datetime.datetime.strftime(current_datetime, '%Y.%m.%d %H:%M:%S')
     write_file(filename, data)
+    print('Запись изменена.')
+    back_to_menu()
 
 def delete_note(filename):
-    get_all_notes(filename)
     input_id = int(input('Введите id заметки, которую нужно удалить: '))
     data = read_file(filename)
 
@@ -72,6 +74,8 @@ def delete_note(filename):
             del data['notes'][index_count]
         index_count += 1
     write_file(filename, data)
+    print('Запись удалена.')
+    back_to_menu()
 
 def get_all_notes(filename):
     data = read_file(filename)
@@ -84,6 +88,13 @@ def get_all_notes(filename):
         print('Created: ' + i['created'])
         print('Last modified: ' + i['last_modified'])
         print('')
+    back_to_menu()
+
+def get_notes_shortlist(filename):
+    data = read_file(filename)
+    sorted_data = sorted(data['notes'], key = lambda k:datetime.datetime.strptime(k['last_modified'], '%Y.%m.%d %H:%M:%S'))
+    for i in sorted_data:
+        print('Id: ' + str(i['id']) + ', ' + 'Last modified: ' + i['last_modified'] + ', ' + 'Head: ' + i['head'])
 
 def get_note_by_id(filename):
     input_id = int(input('Введите id заметки, которую нужно вывести: '))
@@ -96,6 +107,7 @@ def get_note_by_id(filename):
             print('Created: ' + i['created'])
             print('Last modified: ' + i['last_modified'])
             print('')
+    back_to_menu()
 
 def get_notes_by_date_created(filename):
     print('Введите дату, на которую нужно вывести заметки.')
@@ -118,51 +130,44 @@ def get_notes_by_date_created(filename):
             print('Created: ' + i['created'])
             print('Last modified: ' + i['last_modified'])
             print('')
-        
-
-# add_note(filename)
-# change_note(filename)
-# delete_note(filename)
-# show_all_notes(filename)
-# add_note(filename)
-# get_all_notes(filename)
-# change_note(filename)
-# get_all_notes(filename)
-# get_notes_by_date_created(filename)
+    back_to_menu()
 
 def menu():
     print('Добро пожаловать в заметки!')
 
-    while True:
-        print('1 - Показать все заметки')
-        print('2 - Добавить заметку')
-        print('3 - Изменить заметку')
-        print('4 - Открыть заметку по id')
-        print('5 - Открыть все заметки по дате')
-        print('6 - Удалить заметку')
-        
-        print('0 - Закрыть заметки')
-        user_operation = int(input('Введите пункт меню: '))
+    print('Ваши заметки: ')
+    get_notes_shortlist(filename)
 
-        if user_operation == 1:
-            get_all_notes(filename)
-            continue
-        elif user_operation == 2: 
-            add_note(filename)
-            continue
-        elif user_operation == 3:
-            change_note(filename)
-            continue
-        elif user_operation == 4:
-            get_note_by_id(filename)
-            continue
-        elif user_operation == 5:
-            get_notes_by_date_created(filename)
-            continue
-        elif user_operation == 6:
-            delete_note(filename)
-            continue
-        elif user_operation == 0:
-            break
+    print('Меню: ')
+    print('1 - Показать все заметки')
+    print('2 - Добавить заметку')
+    print('3 - Изменить заметку')
+    print('4 - Открыть заметку по id')
+    print('5 - Открыть все заметки по дате')
+    print('6 - Удалить заметку')
+    print('0 - Закрыть заметки')
+
+    user_operation = int(input('Введите пункт меню: '))
+    print('\n')
+
+    if user_operation == 1:
+        get_all_notes(filename)
+    elif user_operation == 2: 
+        add_note(filename)
+    elif user_operation == 3:
+        change_note(filename)
+    elif user_operation == 4:
+        get_note_by_id(filename)
+    elif user_operation == 5:
+        get_notes_by_date_created(filename)
+    elif user_operation == 6:
+        delete_note(filename)
+    elif user_operation == 0:
+        print("Работа закончена. До свидания!")
+
+def back_to_menu():
+    user_operation = input('Для возврата в Меню нажмите enter')
+    if user_operation == "":
+        menu()
 
 menu()
