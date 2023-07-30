@@ -107,7 +107,7 @@ def get_notes_by_date_created(filename):
     data = read_file(filename)
 
     print('\n')
-    print('Заметки на дату создания', f"{input_date}")
+    print('Заметки на дату создания: ', f"{input_date}")
           
     for i in data['notes']:
         date_created = datetime.datetime.strptime(i['created'], '%Y.%m.%d %H:%M:%S')
