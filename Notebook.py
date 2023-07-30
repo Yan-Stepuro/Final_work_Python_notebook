@@ -13,13 +13,6 @@ import datetime
 
 filename = "notebook.json"
 
-# def start():
-#     data = {}
-#     data['notes'] = []
-#     with open(filename, 'w') as outfile:
-#         json.dump(data, outfile)
-#     return 
-
 def read_file(filename): 
     with open(filename, 'r') as json_file:
         data = json.load(json_file)
@@ -82,7 +75,9 @@ def delete_note(filename):
 
 def get_all_notes(filename):
     data = read_file(filename)
-    for i in data['notes']:
+    sorted_data = sorted(data['notes'], key = lambda k:datetime.datetime.strptime(k['last_modified'], '%Y.%m.%d %H:%M:%S'))
+
+    for i in sorted_data:
         print('Id: ' + str(i['id']))
         print('Head: ' + i['head'])
         print('Note: ' + i['note'])
